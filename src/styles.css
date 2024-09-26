@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Ojuju:wght@200..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+.containers {
+  color: white;
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-family: "Ojuju", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  padding: 20px;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+.instructions {
+  display: none;
+}
+
+form {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.floating-label-wrapper {
+  position: relative;
+}
+
+.floating-label-wrapper input {
+  width: 100%;
+  padding: 1rem;
+  padding-top: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  background: transparent;
+}
+
+.floating-label-wrapper label {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 1rem;
+  color: #999;
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.floating-label-wrapper input:focus + label,
+.floating-label-wrapper input:not(:placeholder-shown) + label {
+  top: -0.5rem;
+  left: 1rem;
+  font-size: 0.75rem;
+  color: #333;
+}
