@@ -1,21 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 
-body {
-  padding-top: 50px;
-}
-
-p {
-  font-family: var(--font-body);
-}
-
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-head);
-}
 :root {
-  --shadow-color: 0deg 0% 100%;
+  --shadow-color: 180deg, 100%, 10%;
   --shadow-elevation-low: 0.7px 0.6px 1px hsl(var(--shadow-color) / 0.34),
     1.2px 1px 1.8px -1.2px hsl(var(--shadow-color) / 0.34),
     2.8px 2.4px 4.1px -2.5px hsl(var(--shadow-color) / 0.34);
@@ -31,12 +17,28 @@ h4 {
     31.3px 26.5px 46.1px -1.8px hsl(var(--shadow-color) / 0.34),
     47.6px 40.2px 70.1px -2.1px hsl(var(--shadow-color) / 0.34),
     70.2px 59.3px 103.4px -2.5px hsl(var(--shadow-color) / 0.34);
-  --black-clr: #0c0b0b;
-  --beige-clr: #f1d5bb;
-  --white-clr: #ffff;
+
   --font-size: 0.5rem;
   --font-head: "Lato", sans-serif;
   --font-body: "Fredoka", sans-serif;
+  --bg-black: #100c0d;
+  --font-clr: #e3dcd2;
+  --border-clr: #013328;
+}
+
+body {
+  padding-top: 50px;
+}
+
+p {
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-head);
 }
 
 .background {
@@ -64,8 +66,6 @@ h4 {
 .animex-container {
   position: relative;
   z-index: 1;
-  color: white; /* Adjust as needed */
-  padding: 20px;
   text-align: center;
   height: 100vh;
   font-optical-sizing: auto;
@@ -73,49 +73,53 @@ h4 {
   font-style: normal;
   display: flex;
   justify-content: center;
-  padding-top: 50px;
+  padding-top: 10px;
 }
 
 .navBar {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  padding: 10px;
-  font-family: var(--font-ojuju);
+  background-color: #000000;
+  border: 1px solid var(--border-clr);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.logo {
+  color: #ffffff;
+  font-family: var(--font-body);
 }
 
 .navBar .search-bar {
-  width: 400px;
-  height: 30px;
+  width: 300px;
+  height: 20px;
 }
 
 .anime_list {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin: 0;
-  padding: 10px;
-}
-.anime_list_item {
-  padding: 20px;
-  border: 1px solid black;
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 10px;
-  padding: 0;
+  margin: 0;
+  place-items: center;
+  width: 100%;
+}
+
+.anime_list_item {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
   height: 200px;
   width: 300px;
   overflow: hidden;
-  border: 2px solid #fff;
-  background-color: #000;
-  box-shadow: 0 0 4px #fff;
-  color: wheat;
+  border: 2px solid var(--border-clr);
+  background-color: var(--bg-black);
+  box-shadow: var(--shadow-elevation-low);
+  color: var(--font-clr);
+  border-radius: 12px;
   transition: box-shadow 0.3s ease-in-out;
 }
 
@@ -136,13 +140,13 @@ h4 {
 }
 
 .airing {
-  border: 1px solid #fff;
+  border: 1px solid black;
   align-self: flex-end;
-  border: 1px solid #fff;
+  border: 1px solid var(--border-clr);
   padding: 3px;
   margin: 4px;
   border-radius: 4px;
-  box-shadow: 0 0 1.5px #fff;
+  box-shadow: var(--shadow-elevation-low);
   font-size: 0.7rem;
   font-family: var(--font-body);
 }

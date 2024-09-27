@@ -16,8 +16,8 @@ function NavBar({ query, onSetQuery }) {
   }, []);
 
   return (
-    <div className="navBar bg-primary">
-      <Logo />
+    <div className="navBar">
+      <Logo className="logo" />
       <input
         className="form-control search-bar"
         type="text"

@@ -1,7 +1,7 @@
-const Logo = ({ children }) => {
+const Logo = ({ children, className = "" }) => {
   return (
     <>
-      <h2>Animex</h2>
+      <h2 className={className}>Animex</h2>
       {children}
     </>
   );
