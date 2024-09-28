@@ -22,7 +22,7 @@ const AnimexItem = ({ item }) => {
         <section>
           <h4 className="article_header">{item.title}</h4>
 
-          <p>
+          <p className="article_synopsis">
             {shortenString(item.synopsis, 300)}{" "}
             <span
               style={{ textDecoration: "underline", color: "#0000EE" }}

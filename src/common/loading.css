@@ -4,7 +4,7 @@
   padding: 20px;
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 10px;
 }
@@ -12,4 +12,16 @@
 .loading-item {
   height: 180px;
   width: 100%;
+}
+
+@media (max-width: 500px) {
+  .loading {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 400px) {
+  .loading {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
