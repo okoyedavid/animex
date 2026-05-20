@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 
 export default function StartupGate({
   brand = "Animex",
-  tagline = "Anime discovery, switched on.",
+  tagline = "Find your next anime.",
   duration = 1800,
   storageKey = "animex_startup_seen",
 }) {
@@ -165,7 +165,7 @@ export default function StartupGate({
             transition={{ delay: 0.8, duration: 0.35 }}
             className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-3"
           >
-            <div className="h-1.5 w-24 overflow-hidden rounded-full bg-white/10">
+            <div className="h-1.5 w-24 overflow-hidden rounded-sm bg-white/10">
               <motion.div
                 initial={{ x: "-100%" }}
                 animate={{ x: "0%" }}
@@ -176,7 +176,7 @@ export default function StartupGate({
             <button
               type="button"
               onClick={() => setShow(false)}
-              className="rounded-full border border-white/12 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/78 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
+              className="rounded-sm border border-white/12 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/78 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
             >
               Skip
             </button>

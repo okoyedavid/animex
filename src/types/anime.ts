@@ -16,7 +16,7 @@ type Aired = {
 };
 
 type Broadcast = {
-  day: null | number;
+  day: null | string;
   time: null | string;
   timezone: null | string;
   string: null | string;
@@ -49,7 +49,7 @@ export type Anime = {
   background: string;
   broadcast: Broadcast;
   duration: string;
-  episodes: number;
+  episodes: number | null;
   favorites: number;
   genres: Genre[];
   images: Images;
@@ -76,5 +76,36 @@ export type Anime = {
   trailer: Trailer;
   type: string;
   url: string;
-  year: string | null;
+  year: number | null;
+};
+
+export type AnimeReference = {
+  mal_id: number;
+  url: string;
+  images: Images;
+  title: string;
+};
+
+export type AnimeRecommendation = {
+  mal_id: string;
+  entry: AnimeReference[];
+  content: string;
+  date: string;
+  user: {
+    url: string;
+    username: string;
+  };
+};
+
+export type AnimeWatchEpisode = {
+  mal_id: number;
+  url: string;
+  title: string;
+  premium: boolean;
+};
+
+export type AnimeWatchFeedItem = {
+  entry: AnimeReference;
+  episodes: AnimeWatchEpisode[];
+  region_locked: boolean;
 };

@@ -9,27 +9,17 @@ import { SectionTitle } from "../../../components/SectionTitle";
 import { formatList, formatNumber, formatValue } from "@/lib/utils";
 import { addToWatchlist, isInWatchlist } from "@/utils/watchlistStorage";
 import { toast } from "sonner";
+import DetailCard from "@/components/anime/DetailCard";
 
 type Props = {
   data: Anime;
 };
 
-function DetailCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-cinema backdrop-blur-md">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-        {label}
-      </p>
-      <p className="mt-3 text-lg font-semibold text-white">{value}</p>
-    </div>
-  );
-}
-
 function MetadataRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid gap-2 border-b border-white/8 py-4 sm:grid-cols-[140px_1fr] sm:items-start">
-      <dt className="text-sm font-medium text-slate-400">{label}</dt>
-      <dd className="text-sm leading-6 text-slate-100">{value}</dd>
+    <div className="grid gap-2 border-b border-muted/60 py-4 sm:grid-cols-[140px_1fr] sm:items-start">
+      <dt className="text-sm font-medium">{label}</dt>
+      <dd className="text-sm leading-6">{value}</dd>
     </div>
   );
 }
@@ -111,16 +101,16 @@ export default function AnimeDetails({ data }: Props) {
   ];
 
   return (
-    <main className="min-h-screen bg-surface text-white pt-28 pb-8">
+    <main className="min-h-screen bg-surface pb-8 pt-6 ">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:border-white/25 hover:bg-white/10 hover:text-white"
+          className="inline-flex items-center gap-2 rounded-sm border border-white/10 bg-white/5 px-4 py-2 text-sm transition hover:border-white/25 hover:bg-white/10 hover:"
         >
           Back to search
         </Link>
 
-        <section className="mt-6 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-cinema backdrop-blur-md">
+        <section className="mt-6 overflow-hidden rounded-md border border-white/10 bg-white/5 shadow-cinema backdrop-blur-md">
           <div className="grid gap-0 lg:grid-cols-[320px_1fr]">
             <div className="border-b border-white/10 lg:border-b-0 lg:border-r">
               <PlaceholderImage
@@ -133,22 +123,22 @@ export default function AnimeDetails({ data }: Props) {
 
             <div className="p-6 sm:p-8">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full bg-accent px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-950">
+                <span className="rounded-sm bg-accent px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em]">
                   {formatValue(data.status)}
                 </span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-200">
+                <span className="rounded-sm border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em]">
                   {formatValue(data.type)}
                 </span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-200">
+                <span className="rounded-sm border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em]">
                   {formatValue(data.rating)}
                 </span>
               </div>
 
-              <h1 className="mt-6 font-display text-4xl leading-none tracking-[-0.05em] text-white sm:text-5xl">
+              <h1 className="mt-6 font-display text-4xl leading-none tracking-[-0.05em]  sm:text-5xl">
                 {primaryTitle}
               </h1>
 
-              <div className="mt-4 space-y-2 text-sm text-slate-300">
+              <div className="mt-4 space-y-2 text-sm">
                 <p>{data.title}</p>
                 <p>{formatValue(data.title_japanese)}</p>
               </div>
@@ -159,7 +149,7 @@ export default function AnimeDetails({ data }: Props) {
                     href={data.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-accent-soft"
+                    className="inline-flex items-center gap-2 rounded-sm bg-white px-5 py-3 text-sm font-semibold transition hover:bg-accent-soft"
                   >
                     <ExternalLink size={16} />
                     Open on MyAnimeList
@@ -169,25 +159,23 @@ export default function AnimeDetails({ data }: Props) {
                 <button
                   type="button"
                   onClick={handleAddToWatchlist}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/10"
+                  className="inline-flex items-center gap-2 rounded-sm border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold  transition hover:border-white/25 hover:bg-white/10"
                 >
                   <Plus size={16} />
                   {saved ? "Saved In Watchlist" : "Add To WatchList"}
                 </button>
               </div>
 
-              <p className="mt-8 max-w-4xl text-sm leading-7 text-slate-200 sm:text-base">
+              <p className="mt-8 max-w-4xl text-sm leading-7 sm:text-base">
                 {formatValue(data.synopsis)}
               </p>
 
               {data.background ? (
-                <div className="mt-8 rounded-[1.5rem] border border-white/8 bg-surface-strong/60 p-5">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
+                <div className="mt-8 rounded-md border border-white/8 bg-surface-strong/60 p-5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em]">
                     Background
                   </p>
-                  <p className="mt-3 text-sm leading-7 text-slate-200">
-                    {data.background}
-                  </p>
+                  <p className="mt-3 text-sm leading-7">{data.background}</p>
                 </div>
               ) : null}
             </div>
@@ -207,7 +195,7 @@ export default function AnimeDetails({ data }: Props) {
         </section>
 
         <section className="mt-10 grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-cinema backdrop-blur-md sm:p-8">
+          <div className="rounded-md border border-white/10 bg-white/5 p-6 shadow-cinema backdrop-blur-md sm:p-8">
             <SectionTitle
               eyebrow="Series profile"
               title="Production and release details"
@@ -267,14 +255,14 @@ export default function AnimeDetails({ data }: Props) {
           </div>
 
           <div className="space-y-8">
-            <section className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-cinema backdrop-blur-md sm:p-8">
+            <section className="rounded-md border border-white/10 bg-white/5 p-6 shadow-cinema backdrop-blur-md sm:p-8">
               <SectionTitle
                 eyebrow="Trailer"
                 title="Preview"
                 description={data.title}
               />
 
-              <div className="mt-6 overflow-hidden rounded-[1.5rem] border border-white/10">
+              <div className="mt-6 overflow-hidden rounded-md border border-white/10">
                 {data.trailer.embed_url ? (
                   <iframe
                     src={data.trailer.embed_url}
@@ -293,12 +281,12 @@ export default function AnimeDetails({ data }: Props) {
                 )}
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-3 text-sm text-slate-300">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2">
+              <div className="mt-5 flex flex-wrap gap-3 text-sm">
+                <div className="inline-flex items-center gap-2 rounded-sm border border-white/10 bg-white/5 px-4 py-2">
                   <Film size={16} />
                   Trailer ID: {formatValue(data.trailer.youtube_id)}
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2">
+                <div className="inline-flex items-center gap-2 rounded-sm border border-white/10 bg-white/5 px-4 py-2">
                   <Tv size={16} />
                   {formatValue(data.broadcast.time)}
                 </div>
@@ -309,7 +297,7 @@ export default function AnimeDetails({ data }: Props) {
                   href={data.trailer.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-accent-soft"
+                  className="mt-5 inline-flex items-center gap-2 rounded-sm bg-accent px-5 py-3 text-sm font-semibold transition hover:bg-accent-soft"
                 >
                   <PlayCircle size={16} />
                   Watch trailer externally
@@ -317,7 +305,7 @@ export default function AnimeDetails({ data }: Props) {
               ) : null}
             </section>
 
-            <section className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-cinema backdrop-blur-md sm:p-8">
+            <section className="rounded-md border border-white/10 bg-white/5 p-6 shadow-cinema backdrop-blur-md sm:p-8">
               <SectionTitle
                 eyebrow="Title variants"
                 title="Naming across regions"
@@ -326,26 +314,26 @@ export default function AnimeDetails({ data }: Props) {
 
               <div className="mt-6 space-y-4">
                 <div className="rounded-[1.25rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em]">
                     English
                   </p>
-                  <p className="mt-2 text-base text-white">
+                  <p className="mt-2 text-base ">
                     {formatValue(data.title_english)}
                   </p>
                 </div>
                 <div className="rounded-[1.25rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em]">
                     Japanese
                   </p>
-                  <p className="mt-2 text-base text-white">
+                  <p className="mt-2 text-base ">
                     {formatValue(data.title_japanese)}
                   </p>
                 </div>
                 <div className="rounded-[1.25rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em]">
                     Synonyms
                   </p>
-                  <p className="mt-2 text-base leading-7 text-white">
+                  <p className="mt-2 text-base leading-7 ">
                     {formatList(data.title_synonyms)}
                   </p>
                 </div>
@@ -361,19 +349,19 @@ export default function AnimeDetails({ data }: Props) {
 
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-[1.25rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em]">
                     Community score
                   </p>
-                  <p className="mt-3 flex items-center gap-2 text-2xl font-semibold text-white">
+                  <p className="mt-3 flex items-center gap-2 text-2xl font-semibold ">
                     <Star size={20} className="text-accent-soft" />
                     {formatValue(data.score)}
                   </p>
                 </div>
                 <div className="rounded-[1.25rem] border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em]">
                     Scored by
                   </p>
-                  <p className="mt-3 text-2xl font-semibold text-white">
+                  <p className="mt-3 text-2xl font-semibold ">
                     {formatNumber(data.scored_by)}
                   </p>
                 </div>

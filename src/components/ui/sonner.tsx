@@ -7,15 +7,24 @@ export function Toaster() {
     <Sonner
       position="top-right"
       richColors
-      theme="dark"
+      theme="light"
       toastOptions={{
         classNames: {
           toast:
-            "!border !border-white/10 !bg-surface-strong !text-white !shadow-cinema",
-          title: "!text-white",
-          description: "!text-slate-300",
-          actionButton: "!bg-white !text-slate-950",
-          cancelButton: "!bg-white/10 !text-white",
+            "!border !border-soft-border !bg-surface-strong !text-foreground !shadow-cinema",
+          title: "!text-foreground",
+          description: "!text-muted-foreground",
+          actionButton:
+            "!border !border-primary/20 !bg-primary !text-primary-foreground hover:!bg-primary/90",
+          cancelButton:
+            "!border !border-soft-border !bg-surface !text-foreground hover:!bg-accent/35",
+          success:
+            "!border !border-primary/20 !bg-surface-strong !text-foreground",
+          error:
+            "!border !border-destructive/25 !bg-destructive/10 !text-destructive",
+          warning:
+            "!border !border-primary/25 !bg-accent/45 !text-foreground",
+          info: "!border !border-soft-border !bg-surface !text-foreground",
         },
       }}
     />

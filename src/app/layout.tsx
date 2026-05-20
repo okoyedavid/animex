@@ -3,7 +3,6 @@ import { Manrope, Space_Grotesk } from "next/font/google";
 import { Suspense, type ReactNode } from "react";
 import Providers from "./providers";
 import NavBar from "@/components/NavBar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -26,13 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${manrope.variable} ${spaceGrotesk.variable}`}>
-        <Providers>
-          <Suspense fallback={null}>
-            <NavBar />
-          </Suspense>
-
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

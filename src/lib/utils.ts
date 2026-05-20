@@ -1,3 +1,8 @@
+import type {
+  Anime,
+  AnimeRecommendation,
+  AnimeWatchFeedItem,
+} from "@/types/anime";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -42,4 +47,43 @@ export function formatList(
   return (items as Array<{ mal_id: number; name: string; url: string }>)
     .map((item) => item.name)
     .join(", ");
+}
+
+export function getPosterUrl(
+  item:
+    | Anime
+    | AnimeWatchFeedItem["entry"]
+    | AnimeRecommendation["entry"][number],
+) {
+  return (
+    item.images?.webp?.large_image_url ||
+    item.images?.jpg?.large_image_url ||
+    item.images?.webp?.image_url ||
+    item.images?.jpg?.image_url ||
+    ""
+  );
+}
+
+export function getDisplayTitle(
+  item:
+    | Anime
+    | AnimeWatchFeedItem["entry"]
+    | AnimeRecommendation["entry"][number],
+) {
+  if ("title_english" in item) {
+    return item.title_english || item.title;
+  }
+
+  return item.title;
+}
+
+export function formatCompactNumber(value?: number | null) {
+  if (!value) {
+    return "N/A";
+  }
+
+  return new Intl.NumberFormat("en", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
 }

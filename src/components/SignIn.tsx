@@ -1,149 +1,193 @@
+import { ArrowUpRight, Eye, EyeOff, Loader } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import InputField from "../input";
 import validation_Regex from "../utils/Validation";
-import Logo from "../common/Logo";
-import SignInfo from "../common/SignInfo";
-import Button from "../common/Button";
-import AuthContainer from "./AuthContainer";
 import { PlaceholderImage } from "./PlaceholderImage";
-import { Bookmark, Clock3, Sparkles } from "lucide-react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { SocialButton } from "./SocialButton";
+import { GithubIcon, GoogleIcon } from "./icons";
+import { loginUser } from "@/api/auth";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-const { USER, PWD } = validation_Regex;
+const { EMAIL, PWD } = validation_Regex;
 
-const SignIn = ({
-  backgroundImage,
-  handleChange,
-  userInfo,
-  handleSubmit,
-  errorMessage,
-}) => {
+const SignIn = ({ backgroundImage, handleChange, userInfo }) => {
   useEffect(() => {
-    setValidName(USER.test(userInfo.name));
+    setValidEmail(EMAIL.test(userInfo.email));
     setValidPwd(PWD.test(userInfo.password));
   }, [userInfo]);
 
-  const [validName, setValidName] = useState(false);
+  const [validEmail, setValidEmail] = useState(false);
   const [validPwd, setValidPwd] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => loginUser(userInfo),
+    onError: (error) => {
+      toast.error(
+        error.message ||
+          "Login failed. Please check your credentials and try again.",
+      );
+    },
+    onSuccess: (data) => {
+      toast.success("Logged in successfully!");
+      toast.success("Welcome back, " + data.data.name + "!");
+      router.push("/watchlist");
+    },
+  });
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const isValidSignIn =
+      EMAIL.test(userInfo.email) && PWD.test(userInfo.password);
+
+    if (!isValidSignIn) {
+      toast.error("Name or password is not in the expected format.");
+
+      return;
+    }
+
+    mutate();
+  };
+
+  const imageSrc = backgroundImage
+
+    ?.replace(/^url\(['"]?/, "")
+    .replace(/['"]?\)$/, "");
+
   return (
-    <main className="min-h-screen bg-surface px-4 pb-8 pt-24 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <Logo />
-        <AuthContainer
-          signInfo={
-            <SignInfo
-              link="/signup"
-              member="Want to become a member?"
-              label="Sign up"
+    <main className="h-screen">
+      <div className="h-full grid gap-6 lg:grid-cols-2">
+        <section className="relative h-full overflow-hidden rounded-md border border-white/10 shadow-cinema">
+          <PlaceholderImage
+            src={imageSrc}
+            alt="Anime preview"
+            className="h-full w-full"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,10,18,0.12),rgba(5,10,18,0.78)_58%,rgba(5,10,18,0.94))]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,195,113,0.16),transparent_22%),radial-gradient(circle_at_bottom_left,rgba(67,97,238,0.16),transparent_26%)]" />
+
+          <div className="absolute inset-0 flex flex-col h-full justify-between p-6 sm:p-8">
+            <Link
+              href="/"
+              className={`font-display z-3 text-2xl md:text-3xl text-popover font-semibold tracking-[0.18em] transition `}
             >
-              <div className="space-y-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
-                  Member access
+              Animex
+            </Link>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white">
+                Return to your queue
+              </p>
+              <h1 className="mt-4 max-w-lg font-display text-popover text-4xl leading-tight sm:text-5xl">
+                Step back into your saved anime without losing your place.
+              </h1>
+              <p className="mt-4 max-w-xl text-sm leading-7 text-slate-200 sm:text-base">
+                Sign in to reopen your watchlist, pick up titles you parked for
+                later, and move straight back into search.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="flex items-center p-4">
+          <form onSubmit={handleSubmit} className="w-full p-6 sm:p-8 lg:p-10">
+            <div className="flex flex-col gap-5">
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-primary">
+                  Welcome back
                 </p>
-                <h1 className="font-display text-4xl leading-tight text-white sm:text-5xl">
-                  Return to your next watch faster than the scroll.
-                </h1>
-                <p className="max-w-xl text-base leading-8 text-slate-200">
-                  Sign in to reopen saved picks, keep your search rhythm tight,
-                  and move straight into the titles that already caught your eye.
+                <h2 className="font-display text-3xl leading-tight">
+                  Sign in to Animex
+                </h2>
+                <p className="text-sm leading-7 text-foreground">
+                  Use your account details to access saved anime and continue
+                  where you left off.
                 </p>
               </div>
-            </SignInfo>
-          }
-          visual={
-            <div className="space-y-5">
-              <article className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/20">
-                <div className="relative">
-                  <PlaceholderImage
-                    src={backgroundImage?.replace(/^url\(['"]?/, "").replace(/['"]?\)$/, "")}
-                    alt="Anime preview"
-                    className="aspect-[1.25] w-full"
-                    sizes="(max-width: 1024px) 100vw, 520px"
-                  />
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,17,31,0.05),rgba(8,17,31,0.78))]" />
-                  <div className="absolute inset-x-0 bottom-0 p-5">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent-soft">
-                      Night queue
-                    </p>
-                    <h2 className="mt-2 font-display text-3xl leading-tight text-white">
-                      One login away from the titles you meant to finish.
-                    </h2>
-                  </div>
-                </div>
-              </article>
 
-              <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                <div className="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
-                  <Bookmark size={18} className="text-accent-soft" />
-                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                    Watchlist ready
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-200">
-                    Pick up saved anime without rebuilding your queue.
-                  </p>
-                </div>
-                <div className="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
-                  <Clock3 size={18} className="text-accent-soft" />
-                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                    Faster return
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-200">
-                    Jump straight back into discovery with less friction.
-                  </p>
-                </div>
-                <div className="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
-                  <Sparkles size={18} className="text-accent-soft" />
-                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                    Cleaner flow
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-200">
-                    Search, save, and revisit in one sharper product loop.
-                  </p>
-                </div>
+              <Input
+                name="email"
+                type="email"
+                value={userInfo.email}
+                onChange={handleChange}
+                showError={!validEmail && userInfo.email.length > 0}
+                autoComplete="email"
+                placeholder="Email address"
+                errorMsg="your email must be atleast 4 characters "
+              />
+
+              <div className="relative">
+                <Input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  isPassword
+                  value={userInfo.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  autoComplete="current-password"
+                  showError={!validPwd && userInfo.password.length > 0}
+                  errorMsg={`Password must be atleast 6 characters long must include a capital letter, symbol and one number `}
+                />
+
+                <button
+                  type="button"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => setShowPassword((current) => !current)}
+                  className="absolute inset-y-0 right-4 inline-flex items-center  transition hover:text-white"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <SocialButton
+                  label="Sign up with Google"
+                  icon={<GoogleIcon />}
+                  onClick={() => {}}
+                />
+                <SocialButton
+                  label="Sign up with GitHub"
+                  icon={<GithubIcon />}
+                  onClick={() => {}}
+                />
+              </div>
+
+              <Button
+                type="submit"
+                size="lg"
+                className="min-h-14"
+                disabled={!validEmail || !validPwd || isPending}
+              >
+                {isPending ? (
+                  <span className="flex items-center justify-center gap-1">
+                    <Loader className="animate-spin text-white" /> please
+                    wait{" "}
+                  </span>
+                ) : (
+                  "Sign in"
+                )}
+              </Button>
+
+              <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-foreground">
+                <p>Need an account?</p>
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center gap-2 font-semibold text-primary transition hover"
+                >
+                  Create one
+                  <ArrowUpRight size={16} />
+                </Link>
               </div>
             </div>
-          }
-          handleSubmit={handleSubmit}
-        >
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent-soft">
-              Welcome back
-            </p>
-            <h2 className="font-display text-3xl leading-tight text-white">
-              Sign in to Animex
-            </h2>
-            <p className="text-sm leading-7 text-slate-300">
-              Use your account details to access saved anime and continue where
-              you left off.
-            </p>
-          </div>
-
-          <InputField
-            name="name"
-            type="text"
-            value={userInfo.name}
-            onChange={handleChange}
-            valid={validName}
-            placeholder="Name"
-            errorMsg="your name must be atleast 4 characters "
-          />
-
-          <InputField
-            name="password"
-            type="password"
-            value={userInfo.password}
-            onChange={handleChange}
-            valid={validPwd}
-            placeholder="Password"
-            errorMsg={`Password must be atleast 6 characters long must include a capital letter, symbol and one number `}
-          />
-
-          <Button disabled={!validName || !validPwd} label="Sign In" />
-          {errorMessage ? (
-            <p className="rounded-2xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-rose-100">
-              {errorMessage}
-            </p>
-          ) : null}
-        </AuthContainer>
+          </form>
+        </section>
       </div>
     </main>
   );

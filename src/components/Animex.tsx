@@ -27,12 +27,12 @@ const Animex = ({ backgroundImage, query }) => {
         style={{ backgroundImage }}
       />
 
-      <div className="relative pt-18">
+      <div className="relative">
         <ScrollArea className="h-[90vh] md:h-[90vh] p-4">
-          <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-8 pt-10 sm:px-6 lg:px-8">
+          <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-8 pt-4 sm:px-6 lg:px-8">
             <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
               <div className="max-w-3xl">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-slate-200">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-sm border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-slate-200">
                   <Sparkles size={14} className="text-accent-soft" />
                   Anime search, redesigned
                 </div>
@@ -56,16 +56,15 @@ const Animex = ({ backgroundImage, query }) => {
               <Error err={errorMessage} />
             ) : (
               <div className="flex min-h-[320px] flex-col items-center justify-center rounded-[2rem] border border-dashed border-white/15 bg-white/5 px-6 text-center shadow-cinema backdrop-blur-md">
-                <div className="mb-5 rounded-full border border-white/10 bg-white/5 p-4 text-accent-soft">
+                <div className="mb-5 rounded-sm border border-white/10 bg-white/5 p-4 text-accent-soft">
                   <Telescope size={28} />
                 </div>
                 <h2 className="font-display text-2xl text-white">
                   Start with a title you already love.
                 </h2>
                 <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
-                  Try searching for genres, classic series, or recent releases.
-                  The layout is tuned to keep discovery quick instead of forcing
-                  you through clutter.
+                  Try searching for genres, classic series, or recent releases
+                  to start building your next watchlist.
                 </p>
               </div>
             )}
