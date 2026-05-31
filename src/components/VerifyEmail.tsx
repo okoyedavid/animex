@@ -3,25 +3,30 @@
 import { useMutation } from "@tanstack/react-query";
 import {
   ArrowRight,
+  BadgeCheck,
+  KeyRound,
   Mail,
   MailCheck,
   RefreshCcw,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { resendVerificationEmail, verifyEmail } from "@/api/auth";
 import { useRandomBackground } from "@/hooks/useRandomBackground";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import validation_Regex from "@/utils/Validation";
+import { useRouter } from "next/navigation";
 
 const RESEND_COOLDOWN_SECONDS = 45;
 const { EMAIL } = validation_Regex;
+
+const CODE_REGEX = /^\d{6}$/;
 
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
@@ -41,13 +46,7 @@ function formatCountdown(seconds: number) {
   return `Resend in ${seconds}s`;
 }
 
-function StatTile({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function StatTile({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border border-soft-border bg-card p-4">
       <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
@@ -58,18 +57,22 @@ function StatTile({
   );
 }
 
-export default function VerifyEmail({
-  initialEmail = "",
-}: VerifyEmailProps) {
+export default function VerifyEmail({ initialEmail = "" }: VerifyEmailProps) {
   const backgroundImage = useRandomBackground();
   const [email, setEmail] = useState(initialEmail);
+  const [code, setCode] = useState("");
   const [cooldown, setCooldown] = useState(0);
+  const [verificationState, setVerificationState] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
   useEffect(() => {
     if (!email && initialEmail) {
       setEmail(initialEmail);
     }
   }, [email, initialEmail]);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (cooldown <= 0) {
@@ -84,6 +87,11 @@ export default function VerifyEmail({
   }, [cooldown]);
 
   const isEmailValid = useMemo(() => EMAIL.test(email.trim()), [email]);
+  const normalizedCode = useMemo(() => code.trim(), [code]);
+  const isCodeValid = useMemo(
+    () => CODE_REGEX.test(normalizedCode),
+    [normalizedCode],
+  );
 
   const imageSrc = backgroundImage
     ?.replace(/^url\(['"]?/, "")
@@ -91,15 +99,63 @@ export default function VerifyEmail({
 
   const resendMutation = useMutation({
     mutationFn: async (targetEmail: string) => {
-      await new Promise((resolve) => window.setTimeout(resolve, 900));
-      return { email: targetEmail };
+      const response = await resendVerificationEmail(targetEmail);
+
+      if (!response.success) {
+        throw new Error(
+          response.message ||
+            "Could not resend verification email. Please try again.",
+        );
+      }
+
+      return response;
     },
-    onSuccess: (_, targetEmail) => {
+    onSuccess: (response, targetEmail) => {
       setCooldown(RESEND_COOLDOWN_SECONDS);
-      toast.success(`Verification email sent to ${targetEmail}`);
+      toast.success(
+        response.message || `Verification email sent to ${targetEmail}`,
+      );
     },
-    onError: () => {
-      toast.error("Could not resend verification email. Please try again.");
+    onError: (error: Error) => {
+      toast.error(
+        error.message ||
+          "Could not resend verification email. Please try again.",
+      );
+    },
+  });
+
+  const verifyMutation = useMutation({
+    mutationFn: async ({
+      targetEmail,
+      targetCode,
+    }: {
+      targetEmail: string;
+      targetCode: string;
+    }) => {
+      const response = await verifyEmail({
+        email: targetEmail,
+        otp: targetCode,
+      });
+
+      if (!response.success) {
+        throw new Error(
+          response.message ||
+            "Verification failed. Check the code and try again.",
+        );
+      }
+
+      return response;
+    },
+    onSuccess: (response) => {
+      setVerificationState("success");
+      toast.success(response.message || "Email verified successfully.");
+      router.push("/signin");
+    },
+    onError: (error: Error) => {
+      setVerificationState("error");
+      toast.error(
+        error.message || "Verification failed. Check the code and try again.",
+      );
     },
   });
 
@@ -114,9 +170,30 @@ export default function VerifyEmail({
     resendMutation.mutate(normalizedEmail);
   };
 
+  const handleVerify = () => {
+    const normalizedEmail = email.trim();
+
+    if (!EMAIL.test(normalizedEmail)) {
+      toast.error("Enter a valid email address before verifying.");
+      return;
+    }
+
+    if (!CODE_REGEX.test(normalizedCode)) {
+      toast.error("Enter the verification code from your email.");
+      setVerificationState("error");
+      return;
+    }
+
+    setVerificationState("idle");
+    verifyMutation.mutate({
+      targetEmail: normalizedEmail,
+      targetCode: normalizedCode,
+    });
+  };
+
   return (
-    <main className="min-h-screen p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+    <main className="h-screen">
+      <div className=" grid h-full lg:grid-cols-[1.1fr_0.9fr]">
         <motion.section
           {...fadeUp}
           className="relative overflow-hidden rounded-md border border-soft-border shadow-cinema"
@@ -145,19 +222,20 @@ export default function VerifyEmail({
               </div>
 
               <h1 className="mt-5 font-display text-4xl leading-tight text-white sm:text-5xl">
-                One more step and your account is ready to keep every anime pick.
+                One more step and your account is ready to keep every anime
+                pick.
               </h1>
 
               <p className="mt-4 text-sm leading-7 text-slate-200 sm:text-base">
-                We sent a confirmation link to your inbox. Verify the address,
-                then come back and sign in to unlock your watchlist and saved
-                titles.
+                We sent a verification code to your inbox. Enter it on the
+                right, confirm the address, then continue into your watchlist
+                and saved titles.
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 <StatTile label="Step 1" value="Open the email" />
-                <StatTile label="Step 2" value="Click the link" />
-                <StatTile label="Step 3" value="Return to sign in" />
+                <StatTile label="Step 2" value="Copy the code" />
+                <StatTile label="Step 3" value="Verify here" />
               </div>
             </div>
           </div>
@@ -174,11 +252,11 @@ export default function VerifyEmail({
                 Verify email
               </p>
               <h2 className="font-display text-3xl leading-tight">
-                Check your inbox
+                Enter your code
               </h2>
               <p className="text-sm leading-7 text-muted-foreground">
-                Use the same email you signed up with. If the message does not
-                show up, resend it from here.
+                Use the same email you signed up with, then paste the code we
+                sent. If it does not arrive, request another one below.
               </p>
             </div>
 
@@ -210,7 +288,68 @@ export default function VerifyEmail({
                 errorMsg="Use the address you registered with."
               />
 
+              <Input
+                type="text"
+                name="code"
+                value={code}
+                onChange={(event) =>
+                  setCode(event.target.value.replace(/\D/g, "").slice(0, 6))
+                }
+                placeholder="Enter 6-digit code"
+                autoComplete="one-time-code"
+                showError={code.length > 0 && !isCodeValid}
+                errorMsg="Enter the 6-digit code from your email."
+                className="tracking-[0.24em]"
+              />
+
+              {verificationState === "success" ? (
+                <div className="rounded-md border border-primary/25 bg-primary/10 px-4 py-3 text-sm text-foreground">
+                  <span className="inline-flex items-center gap-2 font-semibold text-primary">
+                    <BadgeCheck size={16} />
+                    Verification successful
+                  </span>
+                  <p className="mt-2 text-muted-foreground">
+                    Your email has been confirmed. You can continue to sign in.
+                  </p>
+                </div>
+              ) : null}
+
+              {verificationState === "error" ? (
+                <div className="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                  <span className="inline-flex items-center gap-2 font-semibold">
+                    <KeyRound size={16} />
+                    Verification failed
+                  </span>
+                  <p className="mt-2 text-muted-foreground">
+                    The code is invalid or expired. Check the latest email or
+                    request a fresh code.
+                  </p>
+                </div>
+              ) : null}
+
               <div className="grid gap-3 sm:grid-cols-2">
+                <Button
+                  type="button"
+                  size="lg"
+                  className="min-h-14"
+                  onClick={handleVerify}
+                  disabled={
+                    verifyMutation.isPending || !isEmailValid || !isCodeValid
+                  }
+                >
+                  {verifyMutation.isPending ? (
+                    <span className="inline-flex items-center gap-2">
+                      <RefreshCcw size={16} className="animate-spin" />
+                      Verifying...
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-2">
+                      <BadgeCheck size={16} />
+                      Verify code
+                    </span>
+                  )}
+                </Button>
+
                 <Button
                   type="button"
                   size="lg"
@@ -232,46 +371,23 @@ export default function VerifyEmail({
                     </span>
                   )}
                 </Button>
-
-                <Button asChild variant="outline" size="lg" className="min-h-14">
-                  <Link href="/signin">
-                    Continue to sign in
-                    <ArrowRight size={16} />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-
-            <div className="rounded-md border border-soft-border bg-surface-muted p-5">
-              <div className="flex items-start gap-3">
-                <Sparkles size={18} className="mt-0.5 text-primary" />
-                <div className="space-y-2 text-sm leading-6 text-muted-foreground">
-                  <p>
-                    The resend action is wired as a UI stub for now. Replace the
-                    mutation body with your backend call when your verification
-                    endpoint is ready.
-                  </p>
-                  <p>
-                    If the email lands in spam, mark it safe before reopening
-                    the verification link.
-                  </p>
-                </div>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-2 text-sm text-muted-foreground">
-              <Link
-                href="/signup"
-                className="font-semibold text-primary transition hover:text-primary/80"
-              >
-                Use a different email
-              </Link>
               <a
                 href={isEmailValid ? `mailto:${email.trim()}` : "mailto:"}
                 className="font-semibold text-foreground transition hover:text-primary"
               >
                 Open mail app
               </a>
+              <Link
+                href="/signin"
+                className="inline-flex items-center gap-2 font-semibold text-foreground transition hover:text-primary"
+              >
+                Continue to sign in
+                <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
         </motion.section>

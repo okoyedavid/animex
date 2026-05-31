@@ -10,17 +10,11 @@ import { PlaceholderImage } from "./PlaceholderImage";
 import { SocialButton } from "./SocialButton";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { registerUser } from "@/api/auth";
+import { loginWithGithub, loginWithGoogle, registerUser } from "@/api/auth";
 
 const { USER, PWD, EMAIL } = validation_Regex;
 
-const SignUp = ({
-  userInfo,
-  handleChange,
-  backgroundImage,
-  handleGoogleSignUp,
-  handleGithubSignUp,
-}) => {
+const SignUp = ({ userInfo, handleChange, backgroundImage }) => {
   useEffect(() => {
     setValidName(USER.test(userInfo.name));
     setValidPwd(PWD.test(userInfo.password));
@@ -181,12 +175,12 @@ const SignUp = ({
                 <SocialButton
                   label="Sign up with Google"
                   icon={<GoogleIcon />}
-                  onClick={handleGoogleSignUp}
+                  onClick={loginWithGoogle}
                 />
                 <SocialButton
                   label="Sign up with GitHub"
                   icon={<GithubIcon />}
-                  onClick={signGithub}
+                  onClick={loginWithGithub}
                 />
               </div>
 

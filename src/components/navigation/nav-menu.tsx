@@ -17,6 +17,35 @@ import {
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 
+export const navigationItems = [
+  {
+    title: "Anime",
+    href: "/anime",
+    type: "dropdown",
+    children: [
+      { label: "Popular Anime", href: "/anime/popular" },
+      { label: "Top Rated", href: "/anime/top-rated" },
+      { label: "Seasonal", href: "/anime/seasonal" },
+      { label: "Genres", href: "/anime/genres" },
+    ],
+  },
+  {
+    title: "Reviews",
+    href: "/reviews",
+    type: "dropdown",
+    children: [
+      { label: "Latest Reviews", href: "/reviews/latest" },
+      { label: "Top Critics", href: "/reviews/top" },
+      { label: "User Reviews", href: "/reviews/user" },
+    ],
+  },
+  {
+    title: "Watchlist",
+    href: "/watchlist",
+    type: "link",
+  },
+];
+
 export default function NavMenu() {
   const search = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
@@ -54,35 +83,41 @@ export default function NavMenu() {
     params.set("q", normalizedQuery);
     router.push(`/search?${params.toString()}`);
   };
-  const navigationItems = [
-    { title: "Anime", href: "/anime", hasDropdown: true },
-    { title: "Reviews", href: "/reviews", hasDropdown: true },
-    { title: "Watchlist", href: "/watchlist", hasDropdown: false },
-  ];
+
   return (
     <div className="flex gap-3  px-4 py-4 sm:px-6">
-      <NavigationMenu>
-        <NavigationMenuList className="flex space-x-6">
+      <NavigationMenu className="hidden lg:block">
+        <NavigationMenuList className="flex gap-6">
           {navigationItems.map((item) => (
             <NavigationMenuItem key={item.title}>
-              {item.hasDropdown ? (
+              {item.type === "dropdown" ? (
                 <>
-                  <NavigationMenuTrigger
-                    className={cn("text-sm font-medium transition-colors")}
-                  >
+                  <NavigationMenuTrigger className="text-sm font-medium">
                     {item.title}
                   </NavigationMenuTrigger>
+
                   <NavigationMenuContent>
-                    {/* <ShopDropDown type={item.title} /> */}
+                    <div className="w-[220px] p-2 space-y-1">
+                      {item.children?.map((child) => (
+                        <NavigationMenuLink asChild key={child.href}>
+                          <Link
+                            href={child.href}
+                            className={cn(
+                              "block rounded-md px-3 py-2 text-sm hover:bg-muted transition",
+                            )}
+                          >
+                            {child.label}
+                          </Link>
+                        </NavigationMenuLink>
+                      ))}
+                    </div>
                   </NavigationMenuContent>
                 </>
               ) : (
                 <NavigationMenuLink asChild>
                   <Link
-                    className={cn(
-                      "block select-none rounded-md px-3 py-2 text-sm font-medium leading-none no-underline outline-none transition-colors",
-                    )}
                     href={item.href}
+                    className="text-sm font-medium hover:text-primary"
                   >
                     {item.title}
                   </Link>

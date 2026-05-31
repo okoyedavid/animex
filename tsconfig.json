@@ -30,7 +30,8 @@
     "**/*.ts",
     "**/*.tsx",
     "src/components/StartUpGate.tsx",
-    "src/app/start/page.tsx"
+    "src/app/start/page.tsx",
+    "src/app/dashboard/settings"
   ],
   "exclude": ["node_modules"]
 }

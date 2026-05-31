@@ -8,9 +8,12 @@ export const backend = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   withCredentials: true,
 });
+let refreshAttempts = 0;
+const MAX_REFRESH_ATTEMPTS = 3;
 
 backend.interceptors.response.use(
   (response) => response,
+
   async (error) => {
     const originalRequest = error.config;
 
@@ -20,14 +23,39 @@ backend.interceptors.response.use(
       error.message ||
       "Request Failed";
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    // Prevent infinite loop on refresh endpoint itself
+    if (originalRequest.url?.includes("/auth/refresh")) {
+      return Promise.reject(error);
+    }
+
+    // Initialize retry flag
+    if (!originalRequest._retryCount) {
+      originalRequest._retryCount = 0;
+    }
+
+    // Only handle 401s
+    if (
+      error.response?.status === 401 &&
+      originalRequest._retryCount < MAX_REFRESH_ATTEMPTS
+    ) {
+      originalRequest._retryCount += 1;
 
       try {
-        await backend.post("/auth/refresh"); // cookies sent automatically
-        return backend(originalRequest); // retry original with new cookie
+        await backend.post("/auth/refresh");
+
+        // Reset global attempts after success
+        refreshAttempts = 0;
+
+        // Retry original request
+        return backend(originalRequest);
       } catch (refreshError) {
-        window.location.href = "/signin";
+        refreshAttempts++;
+
+        // Stop after max attempts
+        if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
+          refreshAttempts = 0;
+        }
+
         return Promise.reject(refreshError);
       }
     }

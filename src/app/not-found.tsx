@@ -4,10 +4,10 @@ export default function NotFound() {
   return (
     <main className="min-h-screen px-4 pb-16 pt-6 sm:px-6 lg:px-8">
       <section className="mx-auto flex max-w-4xl flex-col items-center justify-center rounded-[2.5rem] border border-white/10 bg-white/5 px-6 py-16 text-center shadow-cinema backdrop-blur-xl sm:px-10">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
+        <p className="text-3xl font-semibold uppercase tracking-[0.3em] text-primary">
           404
         </p>
-        <h1 className="mt-4 font-display text-5xl leading-none text-white sm:text-6xl">
+        <h1 className="mt-4 font-display text-5xl leading-none sm:text-6xl">
           This anime page drifted out of range.
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-8 ">
@@ -23,7 +23,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/"
-            className="inline-flex items-center rounded-sm border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/10"
+            className="inline-flex items-center rounded-sm border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold transition hover:border-white/25 hover:bg-white/10"
           >
             Back home
           </Link>

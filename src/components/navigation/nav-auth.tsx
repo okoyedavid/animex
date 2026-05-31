@@ -3,6 +3,7 @@ import { getUser } from "@/api/auth";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from "../ui/button";
 
 export default function NavAuth() {
   const { data, isLoading, isSuccess } = useQuery({
@@ -22,12 +23,12 @@ export default function NavAuth() {
   if (isSuccess && data.data) {
     const user = {
       ...data?.data,
-      profilePhoto: `/download1.jpeg`,
+      profilePhoto: data.data.avatar || "/default-profile.jpeg",
     };
     return (
       <div className="hidden lg:flex lg:items-center px-4 py-4 sm:px-6 lg:gap-3">
         <Link
-          href="/profile"
+          href="/dashboard/settings"
           className="flex items-center gap-2.5 rounded-sm border border-white/10 px-3 py-1.5 text-sm transition hover:border-white/25 hover:bg-white/5"
         >
           <span className="max-w-30 truncate font-bold text-lg">
@@ -48,17 +49,15 @@ export default function NavAuth() {
 
   return (
     <div className="hidden lg:flex lg:items-center px-4 py-4 sm:px-6 lg:gap-3">
-      <Link
-        href="/signup"
-        className="inline-flex items-center rounded-sm border border-white/10 px-4 py-2 text-sm transition hover:border-primary/25 hover:bg-accent/5 hover:text-primary"
-      >
-        Create account
+      <Link href="/signup">
+        <Button variant="secondary" size="lg">
+          Create account
+        </Button>
       </Link>
-      <Link
-        href="/signin"
-        className="inline-flex items-center rounded-sm bg-white px-4 py-2 text-sm font-semibold transition hover:bg-accent-soft"
-      >
-        Sign in
+      <Link href="/signin">
+        <Button variant="ghost" size="lg">
+          Sign in
+        </Button>
       </Link>
     </div>
   );

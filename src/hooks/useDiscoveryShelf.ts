@@ -116,3 +116,35 @@ export function useDiscoveryWatchFeed(limit = 5) {
     },
   });
 }
+
+function curateTopAnime(items: Anime[], limit: number) {
+  return items
+    .filter((anime) => hasPoster(anime) && Boolean(anime.title_english || anime.title))
+    .sort((left, right) => {
+      const leftScore = left.score ?? 0;
+      const rightScore = right.score ?? 0;
+
+      if (rightScore !== leftScore) {
+        return rightScore - leftScore;
+      }
+
+      return (right.members ?? 0) - (left.members ?? 0);
+    })
+    .slice(0, limit);
+}
+
+export function useHeroTopAnime(limit = 5) {
+  return useQuery({
+    queryKey: ["hero-top-anime", limit],
+    staleTime: 1000 * 60 * 30,
+    queryFn: async () => {
+      const { data } = await api.get("/top/anime", {
+        params: {
+          limit: Math.max(limit * 3, 15),
+        },
+      });
+
+      return curateTopAnime((data.data ?? []) as Anime[], limit);
+    },
+  });
+}

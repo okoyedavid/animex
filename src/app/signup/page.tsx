@@ -29,17 +29,11 @@ export default function SignUpPage() {
     }));
   };
 
-  const handleGoogleSignUp = () => {};
-
-  const handleGithubSignUp = () => {};
-
   return (
     <SignUp
       userInfo={userInfo}
       handleChange={handleChange}
       backgroundImage={backgroundImage}
-      handleGoogleSignUp={handleGoogleSignUp}
-      handleGithubSignUp={handleGithubSignUp}
     />
   );
 }

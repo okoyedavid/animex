@@ -7,7 +7,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { SocialButton } from "./SocialButton";
 import { GithubIcon, GoogleIcon } from "./icons";
-import { loginUser } from "@/api/auth";
+import { loginUser, loginWithGithub, loginWithGoogle } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -148,14 +148,14 @@ const SignIn = ({ backgroundImage, handleChange, userInfo }) => {
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <SocialButton
-                  label="Sign up with Google"
+                  label="Sign in with Google"
                   icon={<GoogleIcon />}
-                  onClick={() => {}}
+                  onClick={loginWithGoogle}
                 />
                 <SocialButton
-                  label="Sign up with GitHub"
+                  label="Sign in with GitHub"
                   icon={<GithubIcon />}
-                  onClick={() => {}}
+                  onClick={loginWithGithub}
                 />
               </div>
 

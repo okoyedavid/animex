@@ -2,12 +2,16 @@ import { notFound } from "next/navigation";
 import AnimeDetails from "./AnimeDetails";
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params?: Promise<{ slug?: string }>;
 };
 
 export default async function Page({ params }: Props) {
-  const { slug } = await params;
+  const { slug } = (await params) ?? {};
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+  if (!slug) {
+    notFound();
+  }
 
   if (!baseUrl) {
     throw new Error("NEXT_PUBLIC_BASE_URL is not configured.");

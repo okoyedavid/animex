@@ -6,7 +6,7 @@ import Error from "../common/Error";
 import Loading from "../common/Loading";
 import { ScrollArea } from "./ui/scroll-area";
 
-const Animex = ({ backgroundImage, query }) => {
+const Animex = ({ query }) => {
   const normalizedQuery = query.trim();
   const {
     data: anime = [],
@@ -22,25 +22,17 @@ const Animex = ({ backgroundImage, query }) => {
 
   return (
     <main className="relative h-screen overflow-hidden">
-      <div
-        className="absolute inset-0 h-screen bg-cover bg-center opacity-20 saturate-150"
-        style={{ backgroundImage }}
-      />
-
       <div className="relative">
-        <ScrollArea className="h-[90vh] md:h-[90vh] p-4">
+        <ScrollArea className="h-[96vh] md:h-[96vh] p-4">
           <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-8 pt-4 sm:px-6 lg:px-8">
-            <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            {normalizedQuery && (
               <div className="max-w-3xl">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-sm border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-slate-200">
-                  <Sparkles size={14} className="text-accent-soft" />
-                  Anime search, redesigned
-                </div>
-                <h1 className="font-display text-4xl leading-tight text-white sm:text-5xl lg:text-6xl">
-                  Discover your next Anime obsession.
-                </h1>
+                <span className="font-display text-xl leading-tight sm:text-2xl lg:text-3xl">
+                  Search Results for{" "}
+                  <span className="text-primary">{normalizedQuery}</span>
+                </span>
               </div>
-            </div>
+            )}
 
             {isLoading || isFetching ? (
               <Loading />
@@ -55,14 +47,14 @@ const Animex = ({ backgroundImage, query }) => {
             ) : normalizedQuery ? (
               <Error err={errorMessage} />
             ) : (
-              <div className="flex min-h-[320px] flex-col items-center justify-center rounded-[2rem] border border-dashed border-white/15 bg-white/5 px-6 text-center shadow-cinema backdrop-blur-md">
-                <div className="mb-5 rounded-sm border border-white/10 bg-white/5 p-4 text-accent-soft">
+              <div className="flex min-h-[320px] flex-col items-center justify-center rounded-md border border-dashed border-white/15 bg-muted px-6 text-center shadow-cinema backdrop-blur-md">
+                <div className="mb-5 rounded-sm border border-primary/10 bg-foreground/5 p-4 ">
                   <Telescope size={28} />
                 </div>
-                <h2 className="font-display text-2xl text-white">
+                <h2 className="font-display text-2xl">
                   Start with a title you already love.
                 </h2>
-                <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
+                <p className="mt-3 max-w-xl text-sm leading-7 text-foreground sm:text-base">
                   Try searching for genres, classic series, or recent releases
                   to start building your next watchlist.
                 </p>

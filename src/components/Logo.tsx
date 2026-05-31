@@ -10,7 +10,7 @@ const Logo = ({
   className?: string;
 }) => {
   return (
-    <div className="flex items-center relative px-12 justify-between gap-4 max-w-[250px] max-h-[250px]">
+    <div className="flex items-center relative px-12 justify-between min-h-20 gap-4 max-w-[250px] max-h-[250px]">
       <div className="bg-black/80 absolute h-full w-full  z-2 inset-0 "></div>
       <Image
         src={"/download2.jpeg"}
