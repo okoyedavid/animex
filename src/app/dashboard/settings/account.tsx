@@ -101,7 +101,7 @@ export default function Account() {
   const user = data?.data
     ? {
         ...data.data,
-        profilePhoto: data.data.profile || "/default-profile.jpeg",
+        profilePhoto: data.data.avatar || "/default-profile.jpeg",
       }
     : null;
   const isCurrentEmail = normalizedEmail === user?.email?.toLowerCase();

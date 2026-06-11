@@ -12,9 +12,8 @@ export function DashboardHeader() {
   return (
     <header className="fixed top-0 z-30 h-20 w-full border-b border-border bg-popover/95 shadow-cinema backdrop-blur-xl">
       <div className="flex h-full items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <SidebarTrigger className="ml-3 md:hidden" />
-          <Logo />
+        <div className="flex md:hidden items-center gap-2">
+          <SidebarTrigger className="ml-3" />
         </div>
 
         <Suspense fallback={null}>

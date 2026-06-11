@@ -13,7 +13,7 @@ export default function NavAuth() {
 
   if (isLoading) {
     return (
-      <div className="hidden lg:flex lg:items-center px-4 py-4 sm:px-6 lg:gap-3">
+      <div className="hidden  md:flex lg:items-center px-4 py-4 sm:px-6 lg:gap-3">
         <div className="h-9 w-9 animate-pulse rounded-sm bg-white/10" />
         <div className="h-4 w-24 animate-pulse rounded-sm bg-white/10" />
       </div>

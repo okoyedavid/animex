@@ -1,6 +1,7 @@
+import { Providers } from "@/app/dashboard/settings/account";
+import { replaceNullsInSessions, SessionResponse } from "@/api/session";
 import { User } from "@/types/user";
 import { backend } from "./axios";
-import { Providers } from "@/app/dashboard/settings/account";
 
 type LoginProps = {
   email: string;
@@ -48,28 +49,18 @@ type DeleteProviderResponse = Promise<{
 }>;
 
 async function loginUser({ email, password }: LoginProps): LoginUserResponse {
-  try {
-    const response = await backend.post("/auth/login", {
-      email,
-      password,
-    });
+  const response = await backend.post("/auth/login", {
+    email,
+    password,
+  });
 
-    const { user, message } = response.data;
+  const { user, message } = response.data;
 
-    return {
-      data: user,
-      success: true,
-      message,
-    };
-  } catch (err) {
-    console.error(err);
-
-    return {
-      data: null,
-      success: false,
-      message: err.message,
-    };
-  }
+  return {
+    data: user,
+    success: true,
+    message,
+  };
 }
 
 async function registerUser({
@@ -113,6 +104,28 @@ async function getUser(): LoginUserResponse {
     console.error(error);
 
     return { data: null, success: false, message: error.message };
+  }
+}
+
+async function getSession(): SessionResponse {
+  try {
+    const response = await backend.get("/auth/me/sessions");
+
+    const { data, message } = response.data;
+
+    return {
+      data: Array.isArray(data) ? replaceNullsInSessions(data) : null,
+      success: true,
+      message,
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      data: null,
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    };
   }
 }
 
@@ -168,6 +181,15 @@ async function resendVerificationEmail(email: string): VerifyEmailResponse {
     };
   }
 }
+
+async function logout() {
+  try {
+    await backend.post("/auth/logout");
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Logout failed");
+  }
+}
+
 function loginWithGoogle() {
   window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`;
 }
@@ -293,15 +315,17 @@ export const resetPassword = async ({
 };
 
 export {
-  loginUser,
-  getUser,
-  loginWithGithub,
-  registerUser,
-  verifyEmail,
-  resendVerificationEmail,
-  loginWithGoogle,
-  getProviders,
-  sendChangeEmailOtp,
   confirmChangeEmail,
   deleteProvider,
+  getProviders,
+  getSession,
+  getUser,
+  loginUser,
+  loginWithGithub,
+  logout,
+  loginWithGoogle,
+  registerUser,
+  resendVerificationEmail,
+  sendChangeEmailOtp,
+  verifyEmail,
 };

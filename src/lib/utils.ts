@@ -87,3 +87,23 @@ export function formatCompactNumber(value?: number | null) {
     maximumFractionDigits: 1,
   }).format(value);
 }
+
+export function formatDate(date: string | null | undefined) {
+  if (!date || date === "Unknown") return "Unknown";
+
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(date));
+}
+
+export function getBrowser(userAgent: string | null | undefined) {
+  if (!userAgent || userAgent === "Unknown") return "Unknown browser";
+
+  if (userAgent.includes("Chrome")) return "Chrome";
+  if (userAgent.includes("Firefox")) return "Firefox";
+  if (userAgent.includes("Safari")) return "Safari";
+  if (userAgent.includes("Edge")) return "Edge";
+
+  return userAgent;
+}

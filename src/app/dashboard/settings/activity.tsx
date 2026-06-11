@@ -1,42 +1,30 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, AlertTriangle, CheckCircle2 } from "lucide-react";
+"use client";
 
-const events = [
-  {
-    title: "Password changed",
-    detail: "Chrome on Windows - Lagos, Nigeria",
-    time: "2 hours ago",
-    status: "success",
-  },
-  {
-    title: "New login detected",
-    detail: "Safari on iPhone - Abuja, Nigeria",
-    time: "Yesterday",
-    status: "review",
-  },
-  {
-    title: "Email verification sent",
-    detail: "Code sent to your primary email",
-    time: "May 26, 2026",
-    status: "success",
-  },
-  {
-    title: "Failed login attempt",
-    detail: "Unknown browser - IP rate limited",
-    time: "May 24, 2026",
-    status: "review",
-  },
-];
+import { getAuditEvents } from "@/api/audit";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
+import { Activity } from "lucide-react";
+import ActivityEvent from "./activity-event";
 
 export default function ActivityPage() {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["audit-events"],
+    queryFn: getAuditEvents,
+  });
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
           Security Activity
         </h1>
-
         <p className="mt-1 text-sm text-muted-foreground">
           Review sign-ins, authentication changes, and sensitive account events.
         </p>
@@ -49,50 +37,28 @@ export default function ActivityPage() {
             Audit log
           </CardTitle>
           <CardDescription>
-            This should come from an append-only backend security-events table or
-            collection.
+            Recent security and account activity for your account.
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-3">
-          {events.map((event) => {
-            const needsReview = event.status === "review";
-            const Icon = needsReview ? AlertTriangle : CheckCircle2;
-
-            return (
-              <div
-                key={`${event.title}-${event.time}`}
-                className="grid gap-3 rounded-lg border border-border bg-surface p-4 sm:grid-cols-[1fr_auto]"
-              >
-                <div className="flex gap-3">
-                  <Icon
-                    className={
-                      needsReview
-                        ? "mt-1 size-4 text-amber-500"
-                        : "mt-1 size-4 text-primary"
-                    }
-                  />
-                  <div>
-                    <p className="font-medium">{event.title}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {event.detail}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 sm:justify-end">
-                  <Badge
-                    variant={needsReview ? "destructive" : "secondary"}
-                    className="rounded-md"
-                  >
-                    {needsReview ? "Review" : "Success"}
-                  </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {event.time}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+          {isLoading ? (
+            Array.from({ length: 3 }, (_, index) => (
+              <Skeleton key={index} className="h-24 w-full" />
+            ))
+          ) : isError ? (
+            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+              Failed to load security activity.
+            </div>
+          ) : data?.data.length ? (
+            data.data.map((event) => (
+              <ActivityEvent key={event._id} event={event} />
+            ))
+          ) : (
+            <div className="rounded-lg border border-border bg-surface p-4 text-sm text-muted-foreground">
+              No security activity found.
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -36,7 +36,7 @@ const SignIn = ({ backgroundImage, handleChange, userInfo }) => {
     onSuccess: (data) => {
       toast.success("Logged in successfully!");
       toast.success("Welcome back, " + data.data.name + "!");
-      router.push("/watchlist");
+      router.push("/dashboard");
     },
   });
 

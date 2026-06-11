@@ -114,7 +114,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8 p-4 md:p-8">
-      <section className="grid gap-6 xl:grid-cols-[1fr_360px]">
+      <section className="grid gap-6">
         <div className="space-y-5">
           <Badge variant="outline" className="rounded-md">
             Animex dashboard
@@ -151,7 +151,9 @@ export default function DashboardPage() {
               },
               {
                 title: "Security",
-                value: pendingIssues.length ? `${pendingIssues.length} issues` : "Clear",
+                value: pendingIssues.length
+                  ? `${pendingIssues.length} issues`
+                  : "Clear",
                 detail: "review queue",
                 icon: ShieldCheck,
               },
@@ -179,54 +181,9 @@ export default function DashboardPage() {
             })}
           </div>
         </div>
-
-        <Card className="border-primary/20 bg-primary/5">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="size-4 text-primary" />
-              Pending issues
-            </CardTitle>
-            <CardDescription>
-              Fix these first to make the account more secure and useful.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {pendingIssues.map((issue) => (
-              <div
-                key={issue.title}
-                className="rounded-lg border border-border bg-background/80 p-3"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{issue.title}</p>
-                      <Badge
-                        variant={
-                          issue.severity === "high" ? "destructive" : "outline"
-                        }
-                        className="rounded-md"
-                      >
-                        {issue.severity}
-                      </Badge>
-                    </div>
-                    <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                      {issue.detail}
-                    </p>
-                  </div>
-                </div>
-                <Button asChild variant="outline" size="sm" className="mt-3">
-                  <Link href={issue.href}>
-                    {issue.action}
-                    <ArrowUpRight className="size-3" />
-                  </Link>
-                </Button>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+      <section className="grid gap-6">
         <Card>
           <CardHeader className="gap-3 sm:flex sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -281,39 +238,6 @@ export default function DashboardPage() {
                 </Button>
               </div>
             )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <KeyRound className="size-4 text-primary" />
-              Security next steps
-            </CardTitle>
-            <CardDescription>
-              Backend work that directly improves account protection.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {[
-              "Persist sessions per refresh token",
-              "Add email-change confirmation",
-              "Add TOTP setup and backup codes",
-              "Record append-only security events",
-            ].map((item, index) => (
-              <div
-                key={item}
-                className="flex items-center gap-3 rounded-lg border border-border bg-surface p-3"
-              >
-                <div className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-xs font-semibold text-primary">
-                  {index + 1}
-                </div>
-                <p className="text-sm font-medium">{item}</p>
-              </div>
-            ))}
-            <Button asChild variant="outline" className="w-full justify-start">
-              <Link href="/dashboard/settings">Open settings contract</Link>
-            </Button>
           </CardContent>
         </Card>
       </section>
@@ -410,40 +334,6 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
-      </section>
-
-      <section className="grid gap-4 md:grid-cols-3">
-        {[
-          {
-            label: "Last account check",
-            value: "On page load",
-            icon: Clock3,
-          },
-          {
-            label: "Notification health",
-            value: isEmailVerified ? "Ready" : "Email pending",
-            icon: Bell,
-          },
-          {
-            label: "Backend reference",
-            value: "settings/backend.ts",
-            icon: ShieldCheck,
-          },
-        ].map((item) => {
-          const Icon = item.icon;
-
-          return (
-            <Card key={item.label} className="shadow-none">
-              <CardContent className="flex items-center gap-3 pt-4">
-                <Icon className="size-5 text-primary" />
-                <div>
-                  <p className="text-sm text-muted-foreground">{item.label}</p>
-                  <p className="font-medium">{item.value}</p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
       </section>
     </div>
   );

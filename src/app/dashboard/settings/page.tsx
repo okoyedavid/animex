@@ -4,7 +4,7 @@ import Account from "./account";
 import ActivityPage from "./activity";
 import { SETTINGS_BACKEND_ROUTES } from "./backend";
 import DangerPage from "./danger";
-import NotificationsPage from "./notification";
+import NotificationsPage from "./notifications";
 import ProfileSettingsPage from "./profile";
 import SecurityPage from "./security";
 import SessionsPage from "./sessions";
