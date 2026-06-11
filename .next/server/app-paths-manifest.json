@@ -1,8 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/signin/page": "app/signin/page.js",
-  "/dashboard/settings/page": "app/dashboard/settings/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/watchlist/page": "app/watchlist/page.js",
-  "/search/page": "app/search/page.js"
-}
