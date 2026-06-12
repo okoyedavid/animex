@@ -28,7 +28,6 @@ const SignIn = ({ backgroundImage, handleChange, userInfo }) => {
   const { mutate, isPending } = useMutation({
     mutationFn: () => loginUser(userInfo),
     onError: (error) => {
-      console.log(error);
       toast.error(
         error.message ||
           "Login failed. Please check your credentials and try again.",

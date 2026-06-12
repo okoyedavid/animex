@@ -54,8 +54,6 @@ async function loginUser({ email, password }: LoginProps): LoginUserResponse {
     password,
   });
 
-  console.log(response);
-
   const { user, message } = response.data;
 
   return {
@@ -290,7 +288,6 @@ async function deleteProvider({
       message,
     };
   } catch (err) {
-    console.log(err);
     console.error(err);
 
     return {

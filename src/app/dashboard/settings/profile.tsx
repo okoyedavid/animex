@@ -82,9 +82,7 @@ export default function ProfileSettingsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
-    onError(err) {
-      console.log(err);
-    },
+    onError(err) {},
   });
 
   const avatarPreview = avatar
