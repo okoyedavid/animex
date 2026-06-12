@@ -7,12 +7,12 @@ import NavMenu from "./navigation/nav-menu";
 
 function NavBar() {
   return (
-    <header className="fixed top-0 z-30 h-20 w-full">
-      <div className="flex gap-4 bg-popover shadow-cinema backdrop-blur-xl  justify-between lg:flex-row">
+    <header className="fixed inset-x-0 top-0 z-30 h-20 border-b border-border bg-popover/95 shadow-cinema backdrop-blur-xl">
+      <div className="flex h-full min-w-0 items-stretch">
         <Logo />
         <NavMenu />
         <NavAuth />
-        <div className="lg:hidden my-auto">
+        <div className="flex shrink-0 items-center pr-2 sm:pr-4 xl:hidden">
           <MobileNav />
         </div>
       </div>

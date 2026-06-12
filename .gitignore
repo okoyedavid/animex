@@ -12,6 +12,7 @@
 /build
 .env
 .next
+tsconfig.tsbuildinfo 
 
 # misc
 .DS_Store

@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const REFRESH_TOKEN_COOKIE_NAMES = [
-  process.env.AUTH_REFRESH_COOKIE_NAME,
-  process.env.REFRESH_TOKEN_COOKIE_NAME,
-  "refreshToken",
-  "refresh_token",
-  "refresh-token",
-  "animex_refresh_token",
-].filter(Boolean) as string[];
-
 function hasRefreshToken(request: NextRequest) {
-  return REFRESH_TOKEN_COOKIE_NAMES.some((cookieName) =>
-    Boolean(request.cookies.get(cookieName)?.value),
-  );
+  return Boolean(request.cookies.get("refreshToken")?.value);
 }
 
 export function middleware(request: NextRequest) {

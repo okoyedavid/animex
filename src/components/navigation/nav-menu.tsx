@@ -85,9 +85,9 @@ export default function NavMenu() {
   };
 
   return (
-    <div className="flex gap-3  px-4 py-4 sm:px-6">
-      <NavigationMenu className="hidden lg:block">
-        <NavigationMenuList className="flex gap-6">
+    <div className="flex min-w-0 flex-1 items-center gap-5 px-2 py-3 sm:px-4 xl:px-6">
+      <NavigationMenu className="hidden shrink-0 xl:block">
+        <NavigationMenuList className="flex gap-3 2xl:gap-6">
           {navigationItems.map((item) => (
             <NavigationMenuItem key={item.title}>
               {item.type === "dropdown" ? (
@@ -128,21 +128,25 @@ export default function NavMenu() {
         </NavigationMenuList>
       </NavigationMenu>
 
-      <form className="relative" onSubmit={handleSubmit}>
+      <form
+        className="relative min-w-0 flex-1 xl:ml-auto xl:max-w-xl"
+        onSubmit={handleSubmit}
+        role="search"
+      >
         <Search
-          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2"
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground sm:left-4"
           size={18}
         />
         <Input
-          className="min-h-14 w-full rounded-2xl pl-11 pr-28"
+          className="min-h-11 w-full rounded-lg pl-10 pr-3 sm:min-h-12 sm:rounded-xl sm:pl-11 2xl:pr-28"
           type="text"
-          placeholder="Search anime, studios, or a vibe"
-          aria-describedby="searchBar"
+          placeholder="Search anime"
+          aria-label="Search anime"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           ref={search}
         />
-        <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-2 rounded-sm border border-white/10 bg-surface-strong px-3 py-1 text-xs">
+        <div className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 items-center gap-2 rounded-sm border border-border bg-surface-strong px-3 py-1 text-xs 2xl:flex">
           <Command size={14} />
           <span>Enter</span>
         </div>

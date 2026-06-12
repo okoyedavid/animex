@@ -13,7 +13,7 @@ export default function NavAuth() {
 
   if (isLoading) {
     return (
-      <div className="hidden  md:flex lg:items-center px-4 py-4 sm:px-6 lg:gap-3">
+      <div className="hidden shrink-0 items-center gap-3 px-4 py-4 xl:flex">
         <div className="h-9 w-9 animate-pulse rounded-sm bg-white/10" />
         <div className="h-4 w-24 animate-pulse rounded-sm bg-white/10" />
       </div>
@@ -26,7 +26,7 @@ export default function NavAuth() {
       profilePhoto: data.data.avatar || "/default-profile.jpeg",
     };
     return (
-      <div className="hidden lg:flex lg:items-center px-4 py-4 sm:px-6 lg:gap-3">
+      <div className="hidden shrink-0 items-center gap-3 px-4 py-4 xl:flex">
         <Link
           href="/dashboard/settings"
           className="flex items-center gap-2.5 rounded-sm border border-white/10 px-3 py-1.5 text-sm transition hover:border-white/25 hover:bg-white/5"
@@ -48,7 +48,7 @@ export default function NavAuth() {
   }
 
   return (
-    <div className="hidden lg:flex lg:items-center px-4 py-4 sm:px-6 lg:gap-3">
+    <div className="hidden shrink-0 items-center gap-2 px-4 py-4 xl:flex 2xl:gap-3 2xl:px-6">
       <Link href="/signup">
         <Button variant="secondary" size="lg">
           Create account

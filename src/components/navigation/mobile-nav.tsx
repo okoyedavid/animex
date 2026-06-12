@@ -12,7 +12,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,30 +24,33 @@ export function MobileNav() {
     <Sheet>
       <SheetTrigger asChild>
         <Button
-          size="lg"
+          size="icon"
           variant="outline"
-          className="bg-none shadow-none rounded-md border-none"
+          className="border-none bg-transparent shadow-none"
+          aria-label="Open navigation menu"
+          title="Open navigation menu"
         >
-          Menu
           <Menu />
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="w-[320px] p-0 flex flex-col h-full">
-        <div className="flex items-center relative justify-between  min-h-25 gap-4 w-full max-h-[250px]">
-          <div className="bg-black/80 absolute h-full w-full  z-2 inset-0 "></div>
+      <SheetContent className="flex h-full w-[min(320px,calc(100vw-24px))] flex-col p-0">
+        <div className="relative flex min-h-25 w-full items-center justify-between gap-4">
+          <div className="absolute inset-0 z-[1] h-full w-full bg-black/80"></div>
           <Image
             src={"/download3.jpeg"}
-            alt={"Profile"}
+            alt=""
             fill
             className="object-cover"
           />{" "}
-          <Link
-            href="/"
-            className={`font-display z-3 mx-auto w-20 text-2xl text-center font-semibold tracking-[0.18em] transition text-white`}
-          >
-            Animex
-          </Link>
+          <SheetClose asChild>
+            <Link
+              href="/"
+              className="font-display relative z-[2] mx-auto w-24 text-center text-2xl font-semibold tracking-[0.18em] text-white transition"
+            >
+              Animex
+            </Link>
+          </SheetClose>
         </div>
 
         {/* Body */}
@@ -63,24 +67,27 @@ export function MobileNav() {
                     <AccordionContent>
                       <div className="flex flex-col gap-1 pl-2">
                         {item.children?.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className="rounded-md px-3 py-2 text-sm hover:bg-muted"
-                          >
-                            {child.label}
-                          </Link>
+                          <SheetClose asChild key={child.href}>
+                            <Link
+                              href={child.href}
+                              className="rounded-md px-3 py-2 text-sm hover:bg-muted"
+                            >
+                              {child.label}
+                            </Link>
+                          </SheetClose>
                         ))}
                       </div>
                     </AccordionContent>
                   </AccordionItem>
                 ) : (
-                  <Link
-                    href={item.href}
-                    className="block px-3 py-3 text-sm font-medium hover:bg-muted rounded-md"
-                  >
-                    {item.title}
-                  </Link>
+                  <SheetClose asChild>
+                    <Link
+                      href={item.href}
+                      className="block rounded-md px-3 py-3 text-sm font-medium hover:bg-muted"
+                    >
+                      {item.title}
+                    </Link>
+                  </SheetClose>
                 )}
               </div>
             ))}
@@ -88,11 +95,28 @@ export function MobileNav() {
         </div>
 
         {/* Footer */}
-        <div className="border-t p-4">
+        <div className="grid grid-cols-2 gap-2 border-t p-4">
           <SheetClose asChild>
-            <Button className="w-full" variant="outline">
-              Close
-            </Button>
+            <Link
+              href="/signup"
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "w-full px-2 text-center",
+              )}
+            >
+              Create account
+            </Link>
+          </SheetClose>
+          <SheetClose asChild>
+            <Link
+              href="/signin"
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "w-full px-2 text-center",
+              )}
+            >
+              Sign in
+            </Link>
           </SheetClose>
         </div>
       </SheetContent>
