@@ -63,7 +63,7 @@ const SignIn = ({ backgroundImage, handleChange, userInfo }) => {
   return (
     <main className="h-screen">
       <div className="h-full lg:grid gap-6 lg:grid-cols-2">
-        <section className="hidden lg:relative  h-full overflow-hidden rounded-md border border-white/10 shadow-cinema">
+        <section className="hidden lg:block relative  h-full overflow-hidden rounded-md border border-white/10 shadow-cinema">
           <PlaceholderImage
             src={imageSrc}
             alt="Anime preview"
