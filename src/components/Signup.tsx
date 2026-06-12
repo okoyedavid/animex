@@ -63,15 +63,10 @@ const SignUp = ({ userInfo, handleChange, backgroundImage }) => {
     mutate();
   };
 
-  const signGithub = async () =>
-    await fetch("http://localhost:5000/api/auth/google", {
-      method: "POST",
-    });
-
   return (
     <main className="h-screen">
       <div className="grid h-full gap-6 lg:grid-cols-2">
-        <section className="relative h-full overflow-hidden rounded-md border border-white/10 shadow-cinema">
+        <section className="hidden lg:relative h-full overflow-hidden rounded-md border border-white/10 shadow-cinema">
           <PlaceholderImage
             src={imageSrc}
             alt="Anime sign up preview"
