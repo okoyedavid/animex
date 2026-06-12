@@ -54,6 +54,8 @@ async function loginUser({ email, password }: LoginProps): LoginUserResponse {
     password,
   });
 
+  console.log(response);
+
   const { user, message } = response.data;
 
   return {
